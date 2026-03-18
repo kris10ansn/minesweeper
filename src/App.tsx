@@ -1,12 +1,12 @@
 import React from "react";
 import {
+    Route,
     BrowserRouter as Router,
     Switch,
-    Route,
     useHistory,
 } from "react-router-dom";
-import Minesweeper from "./Minesweeper";
 import MainMenu from "./MainMenu";
+import Minesweeper from "./Minesweeper";
 import Settings from "./Settings";
 import { getStoredState } from "./util/storedState";
 

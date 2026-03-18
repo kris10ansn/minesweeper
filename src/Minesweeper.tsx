@@ -1,18 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
-import { addIfNotNull, count } from "./util/array";
-import {
-    createClearClick,
-    openFactory,
-    isBomb,
-    generateBoard,
-    surroundingSquares,
-} from "./util/board";
-import { className, either, preventDefault } from "./util/functions";
-import "./Minesweeper.scss";
-import Cell from "./Cell";
-import match from "./util/functions/match";
 import Borders from "./Borders";
-import { getStoredState, useStoredState } from "./util/storedState";
+import Cell from "./Cell";
+import "./Minesweeper.scss";
 import {
     Action,
     actionFactory,
@@ -21,6 +10,17 @@ import {
     createIsActionType,
     createRemoveAction,
 } from "./util/action";
+import { addIfNotNull, count } from "./util/array";
+import {
+    createClearClick,
+    generateBoard,
+    isBomb,
+    openFactory,
+    surroundingSquares,
+} from "./util/board";
+import { className, either, preventDefault } from "./util/functions";
+import match from "./util/functions/match";
+import { getStoredState, useStoredState } from "./util/storedState";
 
 export enum GameState {
     NOT_STARTED,
@@ -42,17 +42,17 @@ const Minesweeper: React.FC<{}> = () => {
 
     const [board, setBoard, clearStoredBoard] = useStoredState(
         "board",
-        generateBoard(width, height, mines)
+        generateBoard(width, height, mines),
     );
 
     const [actions, setActions, clearStoredActions] = useStoredState<Action[]>(
         "actions",
-        []
+        [],
     );
 
     const [state, setState, clearStoredState] = useStoredState(
         "state",
-        GameState.NOT_STARTED
+        GameState.NOT_STARTED,
     );
 
     const clearStorage = useCallback(() => {
@@ -70,13 +70,13 @@ const Minesweeper: React.FC<{}> = () => {
             state,
             setState,
         }),
-        [actions, board, setActions, setBoard, setState, state]
+        [actions, board, setActions, setBoard, setState, state],
     );
 
     useEffect(() => {
         match(state).on(
             either<GameState>(GameState.LOST, GameState.WON),
-            clearStorage
+            clearStorage,
         );
     }, [state, clearStorage]);
 
@@ -108,7 +108,7 @@ const Minesweeper: React.FC<{}> = () => {
                                 setState(GameState.LOST);
                             }
                         }
-                    }
+                    },
                 );
 
             const dontOpenFlagged = ({ x, y, type }: Action) =>
@@ -116,7 +116,7 @@ const Minesweeper: React.FC<{}> = () => {
 
             setActions([...actions, ...newActions.filter(dontOpenFlagged)]);
         },
-        [actions, board, isFlagged, setActions, setBoard, setState, state]
+        [actions, board, isFlagged, setActions, setBoard, setState, state],
     );
 
     const createRightClickHandler = useCallback(
@@ -134,12 +134,12 @@ const Minesweeper: React.FC<{}> = () => {
                         setActions(removeFlag(actions, x, y));
                     } else if (!isOpen(x, y)) {
                         setActions(
-                            addIfNotNull(actions, createFlagAction({ x, y }))
+                            addIfNotNull(actions, createFlagAction({ x, y })),
                         );
                     }
                 });
         },
-        [actions, createLeftClickHandler, isFlagged, isOpen, setActions, state]
+        [actions, createLeftClickHandler, isFlagged, isOpen, setActions, state],
     );
 
     const createMiddleClickHandler = useCallback(
@@ -151,7 +151,7 @@ const Minesweeper: React.FC<{}> = () => {
                 const surrounding = surroundingSquares(board)(x, y);
 
                 const flagged = count(surrounding)(({ x, y }) =>
-                    isFlagged(x, y)
+                    isFlagged(x, y),
                 );
 
                 if (flagged === board[y][x]) {
@@ -168,7 +168,7 @@ const Minesweeper: React.FC<{}> = () => {
 
             setActions([...actions, ...newActions]);
         },
-        [actions, board, isFlagged, isOpen, setActions, setState]
+        [actions, board, isFlagged, isOpen, setActions, setState],
     );
 
     return (
@@ -190,7 +190,7 @@ const Minesweeper: React.FC<{}> = () => {
                                     onRightClick={createRightClickHandler(x, y)}
                                     onMiddleClick={createMiddleClickHandler(
                                         x,
-                                        y
+                                        y,
                                     )}
                                     key={x}
                                 />

@@ -4,10 +4,10 @@ Intended to become a chrome extension where you can play minesweeper. Join me on
 
 ## Todo
 
--   [ ] Settings
-    -   [ ] Basic beginner/intermediate/hard settings
-    -   [ ] Advanced settings:
-        -   [ ] Board size, number/percentage of mines
-        -   [ ] ClearClickRadius?
-        -   [ ] Turn on/off borders
--   [ ] Improve file structure
+- [ ] Settings
+    - [ ] Basic beginner/intermediate/hard settings
+    - [ ] Advanced settings:
+        - [ ] Board size, number/percentage of mines
+        - [ ] ClearClickRadius?
+        - [ ] Turn on/off borders
+- [ ] Improve file structure

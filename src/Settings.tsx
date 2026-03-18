@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import Button from "./components/Button";
 import "./Settings.scss";
@@ -22,14 +22,15 @@ enum BoardSize {
 
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
 
-const handleChange = (setValue: SetState<any>, process = (x: any) => x) => (
-    event: React.ChangeEvent<any>
-) => setValue(process(event.target.value));
+const handleChange =
+    (setValue: SetState<any>, process = (x: any) => x) =>
+    (event: React.ChangeEvent<any>) =>
+        setValue(process(event.target.value));
 
 const createSizeInput = (
     value: number,
     setValue: SetState<number>,
-    max: number = 30
+    max: number = 30,
 ) => (
     <input
         type="number"
@@ -46,7 +47,7 @@ const Settings: React.FC = () => {
 
     const [difficulty, setDifficulty] = useStoredState(
         "difficulty",
-        Difficulty.Intermediate
+        Difficulty.Intermediate,
     );
     const [size, setSize] = useStoredState("size", BoardSize.Medium);
 
@@ -62,7 +63,7 @@ const Settings: React.FC = () => {
             setWidth(width);
             setHeight(height);
         },
-        [setWidth, setHeight]
+        [setWidth, setHeight],
     );
 
     useEffect(() => {

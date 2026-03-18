@@ -14,13 +14,13 @@ const parse = (data: string) => {
 
 export const useStoredState = <T>(
     name: string,
-    initialValue: T | (() => T)
+    initialValue: T | (() => T),
 ): [T, React.Dispatch<React.SetStateAction<T>>, () => void] => {
     const storedName = encode(name);
     const stored = localStorage.getItem(storedName);
 
     const [state, setState] = useState<T>(
-        stored ? parse(decode(stored)) || initialValue : initialValue
+        stored ? parse(decode(stored)) || initialValue : initialValue,
     );
 
     useEffect(() => {

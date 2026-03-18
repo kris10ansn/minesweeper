@@ -25,25 +25,23 @@ export const getLastAction = (actions: Action[], actionType: ActionType) =>
 export const uniqueAction = (actions: Action[], action: Action) =>
     !actions.find(actionEquals(action));
 
-export const actionFactory = (actions: Action[], type: ActionType) => ({
-    x,
-    y,
-}: Coordinates): Action | null => {
-    const action = { x, y, type };
+export const actionFactory =
+    (actions: Action[], type: ActionType) =>
+    ({ x, y }: Coordinates): Action | null => {
+        const action = { x, y, type };
 
-    return uniqueAction(actions, action) ? action : null;
-};
+        return uniqueAction(actions, action) ? action : null;
+    };
 
-export const createIsActionType = (actions: Action[]) => (type: ActionType) => (
-    x: number,
-    y: number
-): boolean => !uniqueAction(actions, { x, y, type });
+export const createIsActionType =
+    (actions: Action[]) =>
+    (type: ActionType) =>
+    (x: number, y: number): boolean =>
+        !uniqueAction(actions, { x, y, type });
 
-export const createRemoveAction = (type: ActionType) => (
-    actions: Action[],
-    x: number,
-    y: number
-) => actions.filter(actionNotEquals({ x, y, type }));
+export const createRemoveAction =
+    (type: ActionType) => (actions: Action[], x: number, y: number) =>
+        actions.filter(actionNotEquals({ x, y, type }));
 
 export const allBombsFlagged = (board: number[][], actions: Action[]) => {
     const is = createIsActionType(actions);
@@ -55,7 +53,7 @@ export const allBombsFlagged = (board: number[][], actions: Action[]) => {
         row.every(
             (value, x) =>
                 (value === -1 && isFlagged(x, y)) ||
-                (value > -1 && isOpen(x, y))
-        )
+                (value > -1 && isOpen(x, y)),
+        ),
     );
 };

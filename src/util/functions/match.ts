@@ -1,7 +1,7 @@
 type ConditionFunction<T> = (arg: T) => boolean;
 
 const isConditionFunction = <T>(
-    c: T | ConditionFunction<T>
+    c: T | ConditionFunction<T>,
 ): c is ConditionFunction<T> => typeof c === "function";
 
 interface MatchObject<T, F = (arg: T) => any> {
