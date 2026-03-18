@@ -1,6 +1,8 @@
 {
-    "manifest_version": 2,
-    "name": "Minesweeper",
+    "$schema": "https://json.schemastore.org/chrome-manifest",
+
+    "manifest_version": 3,
+    "name": "Minesweeper: Classic game in a popup",
     "short_name": "Minesweeper",
     "version": "0.1.2",
     "description": "Single player puzzle game",
@@ -11,8 +13,8 @@
         "128": "bomb.png"
     },
 
-    "browser_action": {
-        "default_icon": "bomb.png",
+    "action": {
+        "default_icon": {},
         "default_popup": "index.html",
         "default_title": "Play a game of Minesweeper"
     },
