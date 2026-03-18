@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "./components/Button";
 import "./Settings.scss";
 import { call, className } from "./util/functions";
@@ -43,7 +43,7 @@ const createSizeInput = (
 );
 
 const Settings: React.FC = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [difficulty, setDifficulty] = useStoredState(
         "difficulty",
@@ -82,7 +82,7 @@ const Settings: React.FC = () => {
 
     return (
         <div className="Settings">
-            <div className="close" onClick={call(history.push, "/")}></div>
+            <div className="close" onClick={call(navigate, "/")}></div>
 
             <h1>Difficulty</h1>
 
