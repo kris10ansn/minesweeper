@@ -70,7 +70,7 @@ const Cell: React.FC<CellProps> = ({
             {!(lost && !bomb) && !open && flagged && (
                 <img src={flag} alt="flag" />
             )}
-            {open && value > 0 && value}
+            {!flagged && open && value > 0 && value}
 
             {lost && flagged && !bomb && <img src={notBomb} alt="not bomb" />}
             {lost && !flagged && bomb && <img src={bombImage} alt="bomb" />}
