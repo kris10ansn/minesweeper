@@ -1,5 +1,5 @@
-@import "./variables";
-@import "./styles/highlight-and-shadows.mixin.scss";
+@use "variables";
+@use "styles/highlight-and-shadows.mixin.scss";
 
 @mixin size($size) {
     width: $size;
@@ -22,26 +22,26 @@ table#Minesweeper {
         flex-direction: row;
 
         td {
-            @include size($size-cell);
-            @include highlight-and-shadows(
+            @include size(variables.$size-cell);
+            @include highlight-and-shadows.highlight-and-shadows(
                 $size-borders,
-                $color-highlight,
-                $color-shadows
+                variables.$color-highlight,
+                variables.$color-shadows
             );
 
             font-size: 1rem;
 
-            background-color: $color-background;
+            background-color: variables.$color-background;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
             img {
-                @include size($size-cell - 7px);
+                @include size(variables.$size-cell - 7px);
             }
 
-            $open-border: ($size-borders/2) solid $color-shadows;
+            $open-border: ($size-borders/2) solid variables.$color-shadows;
             $open-padding: $size-borders / 2;
 
             &.open {

@@ -1,14 +1,14 @@
-@import "../variables";
-@import "../styles/highlight-and-shadows.mixin.scss";
+@use "../variables";
+@use "../styles/highlight-and-shadows.mixin.scss";
 
 .Button {
-    background-color: $color-background;
-    @include highlight-and-shadows(6px, $color-highlight, $color-shadows);
+    background-color: variables.$color-background;
+    @include highlight-and-shadows.highlight-and-shadows(6px, variables.$color-highlight, variables.$color-shadows);
 
     position: relative;
 
     &:active {
-        @include highlight-and-shadows(6px, $color-shadows, $color-background);
+        @include highlight-and-shadows.highlight-and-shadows(6px, variables.$color-shadows, variables.$color-background);
 
         div.inner {
             transform: translate(1px, 1px);
@@ -23,8 +23,8 @@
             width: calc(100% + 6px * 2 - 1px);
             height: calc(100% + 6px * 2 - 1px);
 
-            border-bottom: 1px solid $color-shadows;
-            border-right: 1px solid $color-shadows;
+            border-bottom: 1px solid variables.$color-shadows;
+            border-right: 1px solid variables.$color-shadows;
         }
     }
 }

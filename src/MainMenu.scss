@@ -1,13 +1,14 @@
-@import "./variables";
+@use "sass:color";
+@use "variables";
 
 div.MainMenu {
     height: 100%;
     width: 100%;
 
-    min-width: $menu-size;
-    min-height: $menu-size;
+    min-width: variables.$menu-size;
+    min-height: variables.$menu-size;
 
-    background-color: $color-background;
+    background-color: variables.$color-background;
 
     font-size: 1.1rem;
 
@@ -25,12 +26,12 @@ div.MainMenu {
         flex-direction: row;
 
         $color-background-button-main: #2a75f3;
-        $color-shade-button-main: darken($color-background-button-main, 10%);
+        $color-shade-button-main: color.adjust($color-background-button-main, $lightness: -10%);
 
         $color-background-button-settings: #e7bd00;
-        $color-shade-button-settings: darken(
+        $color-shade-button-settings: color.adjust(
             $color-background-button-settings,
-            10%
+            $lightness: -10%
         );
 
         button {

@@ -1,7 +1,7 @@
-@import "./variables";
+@use "variables";
 
 :root {
-    font-size: $size-cell * 17 / 32;
+    font-size: variables.$size-cell * 17 / 32;
 }
 
 html,
@@ -10,7 +10,7 @@ div#root {
     margin: 0;
     padding: 0;
 
-    background-color: $color-background;
+    background-color: variables.$color-background;
 }
 
 * {
