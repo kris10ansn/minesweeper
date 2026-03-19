@@ -17,6 +17,8 @@ const App: React.FC = () => {
                 <Route path="/game" element={<Minesweeper />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/" element={<MainMenu />} />
+
+                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </BrowserRouter>
     );
