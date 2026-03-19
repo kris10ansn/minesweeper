@@ -88,88 +88,79 @@ const Minesweeper: React.FC<{}> = () => {
     const isFlagged = useMemo(() => is(ActionType.FLAG), [is]);
     const isOpen = useMemo(() => is(ActionType.OPEN), [is]);
 
-    const createLeftClickHandler = useCallback(
-        (x: number, y: number) => () => {
-            const newActions: Array<Action> = [];
-            const open = openFactory(board, actions);
+    const leftClick = (x: number, y: number) => {
+        const newActions: Array<Action> = [];
+        const open = openFactory(board, actions);
 
-            match(state)
-                .on(GameState.NOT_STARTED, () => {
-                    setBoard(createClearClick(board, 1)(x, y));
-                    setState(GameState.STARTED);
-                })
-                .on(
-                    either<GameState>(GameState.STARTED, GameState.NOT_STARTED),
-                    () => {
-                        if (!isFlagged(x, y)) {
-                            newActions.push(...open(x, y));
+        match(state)
+            .on(GameState.NOT_STARTED, () => {
+                setBoard(createClearClick(board, 1)(x, y));
+                setState(GameState.STARTED);
+            })
+            .on(
+                either<GameState>(GameState.STARTED, GameState.NOT_STARTED),
+                () => {
+                    if (!isFlagged(x, y)) {
+                        newActions.push(...open(x, y));
 
-                            if (isBomb(x, y)(board)) {
-                                setState(GameState.LOST);
-                            }
+                        if (isBomb(x, y)(board)) {
+                            setState(GameState.LOST);
                         }
-                    },
-                );
-
-            const dontOpenFlagged = ({ x, y, type }: Action) =>
-                type === ActionType.OPEN && !isFlagged(x, y);
-
-            setActions([...actions, ...newActions.filter(dontOpenFlagged)]);
-        },
-        [actions, board, isFlagged, setActions, setBoard, setState, state],
-    );
-
-    const createRightClickHandler = useCallback(
-        (x: number, y: number) => () => {
-            const createFlagAction = actionFactory(actions, ActionType.FLAG);
-
-            match(state)
-                .on(GameState.NOT_STARTED, () => {
-                    const leftClick = createLeftClickHandler(x, y);
-                    leftClick();
-                })
-                .on(GameState.STARTED, () => {
-                    if (isFlagged(x, y)) {
-                        const removeFlag = createRemoveAction(ActionType.FLAG);
-                        setActions(removeFlag(actions, x, y));
-                    } else if (!isOpen(x, y)) {
-                        setActions(
-                            addIfNotNull(actions, createFlagAction({ x, y })),
-                        );
                     }
-                });
-        },
-        [actions, createLeftClickHandler, isFlagged, isOpen, setActions, state],
-    );
+                },
+            )
+            .on(GameState.LOST, () => {
+                // TODO: Handle loss
+            });
 
-    const createMiddleClickHandler = useCallback(
-        (x: number, y: number) => () => {
-            const newActions: Array<Action> = [];
-            const open = openFactory(board, actions);
+        const dontOpenFlagged = ({ x, y, type }: Action) =>
+            type === ActionType.OPEN && !isFlagged(x, y);
 
-            if (isOpen(x, y)) {
-                const surrounding = surroundingSquares(board)(x, y);
+        setActions([...actions, ...newActions.filter(dontOpenFlagged)]);
+    };
 
-                const flagged = count(surrounding)(({ x, y }) =>
-                    isFlagged(x, y),
-                );
+    const rightClick = (x: number, y: number) => {
+        const createFlagAction = actionFactory(actions, ActionType.FLAG);
 
-                if (flagged === board[y][x]) {
-                    surrounding
-                        .filter(({ x, y }) => !isOpen(x, y) && !isFlagged(x, y))
-                        .forEach(({ x, y }) => {
-                            if (isBomb(x, y)(board)) {
-                                setState(GameState.LOST);
-                            }
-                            newActions.push(...open(x, y));
-                        });
+        match(state)
+            .on(GameState.NOT_STARTED, () => {
+                leftClick(x, y);
+            })
+            .on(GameState.STARTED, () => {
+                if (isFlagged(x, y)) {
+                    const removeFlag = createRemoveAction(ActionType.FLAG);
+                    setActions(removeFlag(actions, x, y));
+                } else if (!isOpen(x, y)) {
+                    setActions(
+                        addIfNotNull(actions, createFlagAction({ x, y })),
+                    );
                 }
-            }
+            });
+    };
 
-            setActions([...actions, ...newActions]);
-        },
-        [actions, board, isFlagged, isOpen, setActions, setState],
-    );
+    const middleClick = (x: number, y: number) => {
+        const newActions: Array<Action> = [];
+        const open = openFactory(board, actions);
+
+        if (isOpen(x, y)) {
+            const surrounding = surroundingSquares(board)(x, y);
+
+            const flagged = count(surrounding)(({ x, y }) => isFlagged(x, y));
+
+            if (flagged === board[y][x]) {
+                surrounding
+                    .filter(({ x, y }) => !isOpen(x, y) && !isFlagged(x, y))
+                    .forEach(({ x, y }) => {
+                        if (isBomb(x, y)(board)) {
+                            setState(GameState.LOST);
+                        }
+                        newActions.push(...open(x, y));
+                    });
+            }
+        }
+
+        setActions([...actions, ...newActions]);
+    };
 
     return (
         <Borders>
@@ -186,12 +177,9 @@ const Minesweeper: React.FC<{}> = () => {
                                     context={context}
                                     x={x}
                                     y={y}
-                                    onLeftClick={createLeftClickHandler(x, y)}
-                                    onRightClick={createRightClickHandler(x, y)}
-                                    onMiddleClick={createMiddleClickHandler(
-                                        x,
-                                        y,
-                                    )}
+                                    onLeftClick={() => leftClick(x, y)}
+                                    onRightClick={() => rightClick(x, y)}
+                                    onMiddleClick={() => middleClick(x, y)}
                                     key={x}
                                 />
                             ))}
