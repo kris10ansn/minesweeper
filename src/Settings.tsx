@@ -87,7 +87,7 @@ const Settings: React.FC = () => {
             <h1>Difficulty</h1>
 
             <div className="buttons">
-                {(Object.values(Difficulty) as Difficulty[]).map((name) => (
+                {Object.values(Difficulty).map((name) => (
                     <Button
                         className={className({ selected: difficulty === name })}
                         onClick={selectDifficulty(name)}
@@ -115,7 +115,7 @@ const Settings: React.FC = () => {
             <h1>Size</h1>
 
             <div className="buttons">
-                {(Object.values(BoardSize) as BoardSize[]).map((name) => (
+                {Object.values(BoardSize).map((name) => (
                     <Button
                         className={className({ selected: size === name })}
                         onClick={selectSize(name)}
