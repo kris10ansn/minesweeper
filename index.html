@@ -2,7 +2,6 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta
@@ -11,22 +10,19 @@
         />
         <title>Minesweeper</title>
 
-        <link
-            rel="preload"
-            href="%PUBLIC_URL%/mine-sweeper.ttf"
-            as="font"
-            crossorigin
-        />
+        <link rel="preload" href="/mine-sweeper.ttf" as="font" crossorigin />
 
         <style>
             @font-face {
                 font-family: "MineSweeper";
-                src: url("%PUBLIC_URL%/mine-sweeper.ttf") format("truetype");
+                src: url("/mine-sweeper.ttf") format("truetype");
             }
         </style>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
+
+        <script type="module" src="./src/index.tsx"></script>
     </body>
 </html>
