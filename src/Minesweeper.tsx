@@ -1,6 +1,10 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
+import dead from "./assets/smileys/dead.svg";
+import smile from "./assets/smileys/smile.svg";
 import Borders from "./Borders";
 import Cell from "./Cell";
+import Button from "./components/Button";
+import { SevenSegment } from "./components/SevenSegment";
 import "./Minesweeper.scss";
 import {
     Action,
@@ -10,7 +14,7 @@ import {
     createIsActionType,
     createRemoveAction,
 } from "./util/action";
-import { addIfNotNull, count } from "./util/array";
+import { addIfNotNull, count, flatten } from "./util/array";
 import {
     createClearClick,
     generateBoard,
@@ -36,13 +40,15 @@ export interface GameContext {
 }
 
 const Minesweeper: React.FC<{}> = () => {
+    const bordersRef = useRef<HTMLDivElement>(null);
+
     const width = getStoredState("width", 16);
     const height = getStoredState("height", 16);
-    const mines = getStoredState("mines", 15);
+    const minesPercent = getStoredState("mines", 15);
 
     const [board, setBoard, clearStoredBoard] = useStoredState(
         "board",
-        generateBoard(width, height, mines),
+        generateBoard(width, height, minesPercent),
     );
 
     const [actions, setActions, clearStoredActions] = useStoredState<Action[]>(
@@ -53,6 +59,23 @@ const Minesweeper: React.FC<{}> = () => {
     const [state, setState, clearStoredState] = useStoredState(
         "state",
         GameState.NOT_STARTED,
+    );
+
+    const [time, setTime] = useStoredState("time", 990);
+
+    const mines = useMemo(
+        () => count(flatten(board))((v) => v === -1),
+        [actions],
+    );
+
+    const flags = useMemo(
+        () => count(actions)((action) => action.type === ActionType.FLAG),
+        [actions],
+    );
+
+    const smiley = useMemo(
+        () => (state === GameState.LOST ? dead : smile),
+        [state],
     );
 
     const clearStorage = useCallback(() => {
@@ -72,6 +95,16 @@ const Minesweeper: React.FC<{}> = () => {
         }),
         [actions, board, setActions, setBoard, setState, state],
     );
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (state === GameState.STARTED) {
+                setTime((time) => time + 1);
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [state]);
 
     useEffect(() => {
         match(state).on(
@@ -110,10 +143,7 @@ const Minesweeper: React.FC<{}> = () => {
                         setState(GameState.LOST);
                     }
                 },
-            )
-            .on(GameState.LOST, () => {
-                // TODO: Handle loss
-            });
+            );
 
         const dontOpenFlagged = ({ x, y, type }: Action) =>
             type === ActionType.OPEN && !isFlagged(x, y);
@@ -165,31 +195,58 @@ const Minesweeper: React.FC<{}> = () => {
     };
 
     return (
-        <Borders>
-            <table
-                id="Minesweeper"
-                onContextMenu={preventDefault}
-                className={className({ lost: state === GameState.LOST })}
+        <div id="minesweeper-container">
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width:
+                        bordersRef.current !== null
+                            ? getComputedStyle(bordersRef.current).width
+                            : "auto",
+
+                    height: 84,
+                }}
             >
-                <tbody>
-                    {board.map((row, y) => (
-                        <tr key={y}>
-                            {row.map((value, x) => (
-                                <Cell
-                                    context={context}
-                                    x={x}
-                                    y={y}
-                                    onLeftClick={() => leftClick(x, y)}
-                                    onRightClick={() => rightClick(x, y)}
-                                    onMiddleClick={() => middleClick(x, y)}
-                                    key={x}
-                                />
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </Borders>
+                <SevenSegment
+                    value={mines - flags}
+                    style={{ height: "100%" }}
+                />
+                <Button>
+                    <img
+                        src={smiley}
+                        width={64}
+                        style={{ margin: 0, padding: 0, marginBottom: -5 }}
+                    />
+                </Button>
+                <SevenSegment value={time} style={{ height: "100%" }} />
+            </div>
+            <Borders ref={bordersRef}>
+                <table
+                    id="Minesweeper"
+                    onContextMenu={preventDefault}
+                    className={className({ lost: state === GameState.LOST })}
+                >
+                    <tbody>
+                        {board.map((row, y) => (
+                            <tr key={y}>
+                                {row.map((value, x) => (
+                                    <Cell
+                                        context={context}
+                                        x={x}
+                                        y={y}
+                                        onLeftClick={() => leftClick(x, y)}
+                                        onRightClick={() => rightClick(x, y)}
+                                        onMiddleClick={() => middleClick(x, y)}
+                                        key={x}
+                                    />
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </Borders>
+        </div>
     );
 };
 
