@@ -3,12 +3,20 @@
 
 .Button {
     background-color: variables.$color-background;
-    @include highlight-and-shadows.highlight-and-shadows(6px, variables.$color-highlight, variables.$color-shadows);
+    @include highlight-and-shadows.highlight-and-shadows(
+        6px,
+        variables.$color-highlight,
+        variables.$color-shadows
+    );
 
     position: relative;
 
     &:active {
-        @include highlight-and-shadows.highlight-and-shadows(6px, variables.$color-shadows, variables.$color-background);
+        @include highlight-and-shadows.highlight-and-shadows(
+            6px,
+            variables.$color-shadows,
+            variables.$color-background
+        );
 
         div.inner {
             transform: translate(1px, 1px);
