@@ -84,6 +84,11 @@ const Minesweeper: React.FC<{}> = () => {
         clearStoredState();
     }, [clearStoredActions, clearStoredBoard, clearStoredState]);
 
+    const reset = useCallback(() => {
+        clearStorage();
+        location.reload();
+    }, [clearStorage]);
+
     const context: GameContext = useMemo(
         () => ({
             board,
@@ -212,7 +217,7 @@ const Minesweeper: React.FC<{}> = () => {
                     value={mines - flags}
                     style={{ height: "100%" }}
                 />
-                <Button>
+                <Button onClick={reset}>
                     <img
                         src={smiley}
                         width={64}
