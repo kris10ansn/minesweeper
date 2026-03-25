@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import dMinus from "../assets/7segment/d-.svg";
 import d0 from "../assets/7segment/d0.svg";
 import d1 from "../assets/7segment/d1.svg";
 import d2 from "../assets/7segment/d2.svg";
@@ -12,6 +13,14 @@ import d9 from "../assets/7segment/d9.svg";
 
 const DIGITS = [d0, d1, d2, d3, d4, d5, d6, d7, d8, d9];
 
+const getDigitImage = (digit: string) => {
+    if (digit === "-") {
+        return dMinus;
+    }
+
+    return DIGITS[Number(digit)];
+};
+
 export type SevenSegmentProps = {
     value: number;
 } & React.HTMLAttributes<HTMLDivElement>;
@@ -21,10 +30,17 @@ export const SevenSegment: React.FC<SevenSegmentProps> = ({
     style,
     ...props
 }) => {
-    const digits = useMemo(
-        () => (value > 999 ? 999 : value).toString().padStart(3, "0").split(""),
-        [value],
-    );
+    const digits = useMemo(() => {
+        if (value < 0) {
+            return ["-", "-", "-"];
+        }
+
+        if (value > 999) {
+            return ["9", "9", "9"];
+        }
+
+        return value.toString().padStart(3, "0").split("");
+    }, [value]);
 
     return (
         <div
@@ -38,9 +54,9 @@ export const SevenSegment: React.FC<SevenSegmentProps> = ({
             }}
             {...props}
         >
-            <img src={DIGITS[Number(digits[0])]} style={{ height: "100%" }} />
-            <img src={DIGITS[Number(digits[1])]} style={{ height: "100%" }} />
-            <img src={DIGITS[Number(digits[2])]} style={{ height: "100%" }} />
+            <img src={getDigitImage(digits[0])} style={{ height: "100%" }} />
+            <img src={getDigitImage(digits[1])} style={{ height: "100%" }} />
+            <img src={getDigitImage(digits[2])} style={{ height: "100%" }} />
         </div>
     );
 };
