@@ -215,7 +215,7 @@ const Minesweeper: React.FC<{}> = () => {
                 }}
             >
                 <SevenSegment
-                    value={mines - flags}
+                    value={state === GameState.NOT_STARTED ? -1 : mines - flags}
                     style={{ height: "100%" }}
                 />
                 <Button onClick={reset}>
