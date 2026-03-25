@@ -139,7 +139,7 @@ const Minesweeper: React.FC<{}> = () => {
             .on(
                 either<GameState>(GameState.STARTED, GameState.NOT_STARTED),
                 () => {
-                    if (isFlagged(x, y)) {
+                    if (isFlagged(x, y) || flags >= mines) {
                         return;
                     }
 
