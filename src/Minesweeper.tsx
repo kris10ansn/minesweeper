@@ -61,7 +61,14 @@ const Minesweeper: React.FC<{}> = () => {
         GameState.NOT_STARTED,
     );
 
-    const [time, setTime] = useStoredState("time", 990);
+    const [time, setTime, clearStoredTime] = useStoredState("time", 0);
+
+    const clearStorage = useCallback(() => {
+        clearStoredBoard();
+        clearStoredActions();
+        clearStoredState();
+        clearStoredTime();
+    }, [ clearStoredActions, clearStoredBoard, clearStoredState, clearStoredTime, ]); // prettier-ignore
 
     const mines = useMemo(
         () => count(flatten(board))((v) => v === -1),
@@ -77,12 +84,6 @@ const Minesweeper: React.FC<{}> = () => {
         () => (state === GameState.LOST ? dead : smile),
         [state],
     );
-
-    const clearStorage = useCallback(() => {
-        clearStoredBoard();
-        clearStoredActions();
-        clearStoredState();
-    }, [clearStoredActions, clearStoredBoard, clearStoredState]);
 
     const reset = useCallback(() => {
         clearStorage();
