@@ -139,7 +139,7 @@ const Minesweeper: React.FC<{}> = () => {
             .on(
                 either<GameState>(GameState.STARTED, GameState.NOT_STARTED),
                 () => {
-                    if (isFlagged(x, y) || flags >= mines) {
+                    if (isFlagged(x, y)) {
                         return;
                     }
 
@@ -168,7 +168,7 @@ const Minesweeper: React.FC<{}> = () => {
                 if (isFlagged(x, y)) {
                     const removeFlag = createRemoveAction(ActionType.FLAG);
                     setActions(removeFlag(actions, x, y));
-                } else if (!isOpen(x, y)) {
+                } else if (!isOpen(x, y) && flags < mines) {
                     setActions(
                         addIfNotNull(actions, createFlagAction({ x, y })),
                     );
