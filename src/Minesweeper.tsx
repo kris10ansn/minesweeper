@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import dead from "./assets/smileys/dead.svg";
 import smile from "./assets/smileys/smile.svg";
+import sunglasses from "./assets/smileys/sunglasses.svg";
 import Borders from "./Borders";
 import Cell from "./Cell";
 import Button from "./components/Button";
@@ -80,10 +81,12 @@ const Minesweeper: React.FC<{}> = () => {
         [actions],
     );
 
-    const smiley = useMemo(
-        () => (state === GameState.LOST ? dead : smile),
-        [state],
-    );
+    const smiley = useMemo(() => {
+        if (state === GameState.WON) return sunglasses;
+        if (state === GameState.LOST) return dead;
+
+        return smile;
+    }, [state]);
 
     const reset = useCallback(() => {
         clearStorage();
